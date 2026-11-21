@@ -49,6 +49,51 @@ Each file is read once per request, is capped at 4 MiB (larger files report `inv
 
 The response carries `ETag` derived from the four files' `(size, mtimeMs)` stamps. Send `If-None-Match` and the route answers `304` with no body when nothing changed. Only `GET` and `HEAD` are accepted (`405` otherwise), and a cross-origin caller gets `403`.
 
+## Browser event bus (P2-⑩, 0.3.0)
+
+The client half publishes one global emitter while the plugin is loaded:
+
+```js
+window.__dshSessionEvents = {   // primary name
+  version: 1,
+  emit({ source, sessionId, kind }),   // source is required, 1..32 characters
+  on(listener) => off,                 // off is idempotent
+}
+window.dshSessionEvents              // same object, public alias
+```
+
+The bus never overwrites a name that is already taken. A second live instance
+(or a foreign object) pushes the next one to a versioned pair:
+`__dshSessionEvents.v2` + `dshSessionEvents.v2`, then `.v3`, up to `.v9`.
+Consumers should read `window.__dshSessionEvents ?? window['__dshSessionEvents.v2'] ?? window.dshSessionEvents`.
+
+It bridges the three data plugins into one stream:
+
+| source | stream | event | payload key |
+| --- | --- | --- | --- |
+| `todos` | `/session-todos/events` | `todos` | `todos` |
+| `stars` | `/session-stars/events` | `ratings` | `ratings` |
+| `notify` | `/session-notify/events` | `watched` | `watched` |
+
+On connect each source emits one `{ source, sessionId: null, kind: 'snapshot' }`.
+The frames carry the whole map, so the bus keeps the previous snapshot and
+emits `kind: 'changed'` only for the session ids whose entry appeared,
+changed, or disappeared. Malformed frames are ignored, and a missing
+`EventSource` or a 404 route is skipped.
+
+Unloading the plugin closes only its own streams and removes exactly the names
+this instance claimed (the alias is skipped when it was already taken), so a
+reload never disturbs another live instance.
+
+```js
+const bus = window.__dshSessionEvents ?? window.dshSessionEvents
+const off = bus.on(async (event) => {
+  if (event.source !== 'todos') return
+  const meta = await fetch('/session-meta').then((response) => response.json())
+  // use meta.sessions[event.sessionId]
+})
+```
+
 ## Install
 
 The bundle declares `dsh.bundle.patch`; install it through **Plugins → Add plugin** or the plugin manager's `install_bundle`. This repository does not install itself.

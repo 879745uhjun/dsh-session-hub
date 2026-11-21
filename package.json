@@ -1,6 +1,6 @@
 {
   "name": "dsh-session-hub",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Read-only aggregation of per-session metadata (stars, todos, boxes, finish alerts) for the DeepSeek Harness Web UI.",
   "type": "module",
   "main": "index.js",
@@ -42,7 +42,7 @@
     },
     "client": {
       "platform": "web",
-      "immediately": false,
+      "immediately": true,
       "inject": []
     }
   }
