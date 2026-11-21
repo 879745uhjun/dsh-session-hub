@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Session metadata hub",
+    "description": "Read-only aggregation of per-session stars, todos, boxes, and finish alerts behind one ETag-aware /session-meta route for other plugins and pages; it never writes a file."
+  }
+}

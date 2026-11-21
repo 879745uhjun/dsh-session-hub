@@ -1,0 +1,49 @@
+{
+  "name": "dsh-session-hub",
+  "version": "0.1.0",
+  "description": "Read-only aggregation of per-session metadata (stars, todos, boxes, finish alerts) for the DeepSeek Harness Web UI.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "README.md",
+    "LICENSE",
+    "scripts/check-syntax.mjs"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "session",
+    "metadata",
+    "aggregation"
+  ],
+  "engines": {
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
+  },
+  "scripts": {
+    "pretest": "node scripts/check-syntax.mjs",
+    "test": "node --test \"test/**/*.test.mjs\""
+  },
+  "license": "MIT",
+  "author": "879745uhjun",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": false,
+      "inject": []
+    }
+  }
+}
