@@ -45,5 +45,13 @@
       "immediately": true,
       "inject": []
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/879745uhjun/dsh-session-hub.git"
+  },
+  "homepage": "https://github.com/879745uhjun/dsh-session-hub#readme",
+  "bugs": {
+    "url": "https://github.com/879745uhjun/dsh-session-hub/issues"
   }
 }

@@ -105,3 +105,11 @@ npm test
 ```
 
 `pretest` runs `scripts/check-syntax.mjs` over every source, then the suite covers aggregation, per-source degradation, truncation, ETag/304, 403, 405, and HEAD.
+
+## Install from GitHub
+
+```sh
+dsh plugin --profile desktop add github:879745uhjun/dsh-session-hub
+```
+
+Reload the Web UI page after installing.
